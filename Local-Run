@@ -1,0 +1,100 @@
+Step 1: Download the Dataset
+
+Open this link: https://drive.google.com/file/d/1W-88FKdbZ3BMzgz1HWa-RKk4t5OWPuji/view
+Click the Download button (top right)
+Save the file as Dataset-SA.csv
+
+
+Step 2: Set Up Your Project Folder
+Create a folder and place both files inside it:
+my_project/
+├── main.py             ← the FastAPI file you downloaded
+├── requirements.txt    ← the requirements file you downloaded
+└── Dataset-SA.csv      ← the dataset you just downloaded
+
+Step 3: Install Python
+Make sure you have Python 3.10 or 3.11 installed.
+Check with:
+bashpython --version
+If not installed, download from https://www.python.org/downloads/
+
+Step 4: Create a Virtual Environment
+Open a terminal inside your project folder and run:
+bash# Create virtual environment
+python -m venv venv
+
+# Activate it — Windows:
+venv\Scripts\activate
+
+# Activate it — Mac/Linux:
+source venv/bin/activate
+You'll see (venv) appear in your terminal. That means it's active.
+
+Step 5: Install Dependencies
+bashpip install -r requirements.txt
+This installs FastAPI, TensorFlow, scikit-learn, NLTK, and everything else. It may take 2–5 minutes.
+
+Step 6: Start the API Server
+bashuvicorn main:app --reload
+```
+
+You should see:
+```
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process
+```
+
+**Leave this terminal open.** The server runs here.
+
+---
+
+## Step 7: Open the Swagger UI (Interactive Docs)
+
+Open your browser and go to:
+```
+http://127.0.0.1:8000/docs
+This gives you a full interactive interface to test every endpoint — no extra tools needed.
+
+Step 8: Train the Models
+This is the most important first step before using any other endpoint.
+In the Swagger UI:
+
+Click POST /train
+Click "Try it out"
+Paste this into the request body:
+
+json{
+  "csv_path": "Dataset-SA.csv",
+  "train_lstm": false
+}
+
+Click Execute
+
+
+Training takes 1–3 minutes. When done, you'll see accuracy scores in the response.
+
+If you also want the LSTM model trained (takes 5–10 extra minutes), set "train_lstm": true.
+
+Step 9: Use the Endpoints
+Predict Sentiment
+Click POST /predict/sentiment → Try it out → paste:
+json{
+  "review": "This product is absolutely amazing, works perfectly!"
+}
+Predict Star Rating
+Click POST /predict/rating → Try it out → paste:
+json{
+  "review": "Stopped working after 2 days, very disappointed."
+}
+Check Urgency Score
+Click POST /urgency → Try it out → paste:
+json{
+  "review": "Terrible quality, complete scam, I want a return!"
+}
+Dataset Stats
+Click GET /eda/stats → Try it out → Execute (no body needed)
+Top Words
+Click GET /eda/top-words → Try it out → set n=20 → Execute
+Compare LR vs LSTM
+Click GET /model/comparison → Try it out → Execute
+(LSTM column will be null if you didn't train it)
